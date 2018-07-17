@@ -19,16 +19,13 @@ class Universal
 	{
 		$className = $classNameOrigin = (new \ReflectionClass($this))->getShortName();
 
-        if (empty($this->className))
+        if (empty($this->essenceName))
         {
-            $this->className = $className;
+            $this->essenceName = $className;
         }
 
-        if (empty($this->modelName))
-        {
-        	dd($classNameOrigin.' set modelName property');
-        }
+        $this->essence = \Asdozzz\Essence\Essence::factory($this->essenceName);
 
-        $this->model = new $this->modelName;
+        $this->model = new $this->essence->modelName;
 	}
 }

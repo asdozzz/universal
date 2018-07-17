@@ -6,55 +6,58 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use \Asdozzz\Traits\Crud\Datasource as CrudDatasource;
 
+/**
+ * Class Universal
+ *
+ * @package Asdozzz\Universal\Datasource
+ */
 class Universal
 {
 	use CrudDatasource;
-
-    public $primary_key = '';
-    public $table = '';
-    public $softDeletes = false;
+    /**
+     * @var string
+     */
+    public $primary_key   = '';
+    /**
+     * @var string
+     */
+    public $table         = '';
+    /**
+     * @var bool
+     */
+    public $softDeletes   = false;
+    /**
+     * @var string
+     */
     public $deleted_field = 'deleted_at';
+    /**
+     * @var \Asdozzz\Essence\Interfaces\iEssence
+     */
+    public $essence;
 
-	public function __construct()
+    /**
+     * Universal constructor.
+     */
+    public function __construct()
 	{
-        $className = $classNameOrigin = (new \ReflectionClass($this))->getShortName();
-
-        if (empty($this->table))
-        {
-            $this->table = strtolower($className);
-        }
-
-        if (empty($this->primary_key))
-        {
-            $this->primary_key = 'id';
-        }
-
 		$this->init();
 	}
 
-	public function init()
+    /**
+     *
+     */
+    public function init()
 	{
-		$path = explode('\\', __CLASS__);
-        $className =  array_pop($path);
-        
-        if (empty($this->className))
+        $className = $classNameOrigin = (new \ReflectionClass($this))->getShortName();
+
+        if (empty($this->essenceName))
         {
-            $this->className = $className;
+            $this->essenceName = $className;
         }
 
-        if (empty($this->moduleName))
-        {
-            $this->moduleName = $className;
-        }
+        $this->essence = \Asdozzz\Essence\Essence::factory($this->essenceName);
 
-        if (empty($this->primary_key))
-        {
-            throw new \Exception(__CLASS__.":need set primary_key property");
-        }
-
-        if (empty($this->table))
-        {
-            throw new \Exception(__CLASS__.":need set table property");
-        }
+        $this->table = $this->essence->table;
+        $this->primary_key = $this->essence->primary_key;
 	}
 }

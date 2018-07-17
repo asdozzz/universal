@@ -2,58 +2,70 @@
 
 namespace Asdozzz\Universal\Controller;
 
-use App\Universal;
-use TableConfig;
 use App\User;
-use Theme,Request,Exception,Config;
+use Request,Exception,Config;
 use \Asdozzz\Traits\Crud\Controller as CrudController;
 
+/**
+ * Class UniversalController
+ *
+ * @package Asdozzz\Universal\Controller
+ */
 class UniversalController extends \App\Http\Controllers\Controller
 {
     use CrudController;
+    /**
+     * @var null
+     */
+    public    $businessName = null;
+    /**
+     * @var null
+     */
+    public    $table       = null;
+    /**
+     * @var null
+     */
+    public    $essenceName = null;
+    /**
+     * @var
+     */
+    protected $essence;
+    /**
+     * @var
+     */
+    protected $business;
 
-    public $businessName = null;
-    public $table = null;
-
+    /**
+     * UniversalController constructor.
+     */
     public function __construct()
     {
-        //parent::__construct();
         $this->init();
     }
-    
+
+    /**
+     *
+     */
     public function init()
     {
         $className = $classNameOrigin = (new \ReflectionClass($this))->getShortName();
         $className = str_replace('Admin', '', $className);
         $className = str_replace('Controller', '', $className);
 
-        if (empty($this->className))
+        if (empty($this->essenceName))
         {
-            $this->className = $className;
+            $this->essenceName = $className;
         }
 
-        if (empty($this->moduleName))
-        {
-            $this->moduleName = strtolower($className);
-        }
-
-        if (empty($this->businessName))
-        {
-            dd($classNameOrigin.' set businessName property');
-        }
-
-        if (empty($this->table))
-        {
-            $this->table = strtolower($className);
-        }
+        $this->essence = \Asdozzz\Essence\Essence::factory($this->essenceName);
 
         if (empty($this->views))
         {
             $this->views = [
-                'index' => 'modules.'.$this->moduleName.'.index'
+                'index' => 'modules.'.$this->essence->moduleName.'.'.$this->essenceName.'.index'
             ];
         }
 
-        $this->business = new $this->businessName;
+        $this->business = new $this->essence->businessName;
     }
 }

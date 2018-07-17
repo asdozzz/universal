@@ -4,63 +4,58 @@ namespace Asdozzz\Universal\Model;
 
 use \Asdozzz\Traits\Crud\Model as CrudModel;
 
+/**
+ * Class Universal
+ *
+ * @package Asdozzz\Universal\Model
+ */
 class Universal
 {
     use CrudModel;
-
-    protected $softDeletes = false;
+    /**
+     * @var bool
+     */
+    protected $softDeletes   = false;
+    /**
+     * @var string
+     */
     protected $deleted_field = 'deleted_at';
+    /**
+     * @var string
+     */
     protected $defaultSchema = 'default';
+    /**
+     * @var
+     */
+    protected $datasource;
+    /**
+     * @var
+     */
+    protected $essence;
 
+    /**
+     * Universal constructor.
+     */
     public function __construct()
     {
-        $className = $classNameOrigin = (new \ReflectionClass($this))->getShortName();
-
-        if (empty($this->table))
-        {
-            $this->table = strtolower($className);
-        }
-
-        if (empty($this->table))
-        {
-            $this->table = strtolower($className);
-        }
-
         $this->init();
     }
 
+    /**
+     *
+     */
     function init()
     {
-        $path = explode('\\', __CLASS__);
-        $className =  array_pop($path);
-        
-        if (empty($this->className))
-        {
-            $this->className = $className;
-        }
-
-        if (empty($this->moduleName))
-        {
-            $this->moduleName = $className;
-        }
-
-        if (empty($this->table))
-        {
-            $this->table = strtolower($className);
-        }
+        $className = $classNameOrigin = (new \ReflectionClass($this))->getShortName();
 
         if (empty($this->essenceName))
         {
-            dd($className.' set essenceName property');
-        }
-
-        if (empty($this->datasourceName))
-        {
-            dd($className.' set datasourceName property');
+            $this->essenceName = $className;
         }
 
         $this->essence = \Asdozzz\Essence\Essence::factory($this->essenceName);
-        $this->datasource = new $this->datasourceName;
+
+        $this->datasource = new $this->essence->datasourceName;
 
         $haystack = ['columns','datatables','permissions','forms','primary_key'];
 
