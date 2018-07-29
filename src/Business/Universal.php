@@ -10,6 +10,9 @@ class Universal
 {
 	use CrudBusiness;
 
+    public $model;
+    public $essence;
+
 	public function __construct()
 	{
 		$this->init();
