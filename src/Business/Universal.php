@@ -6,16 +6,35 @@ use Illuminate\Database\Eloquent\Model;
 use DB,Datatables,TableConfig;
 use \Asdozzz\Traits\Crud\Business as CrudBusiness;
 
+/**
+ * Class Universal
+ *
+ * @package Asdozzz\Universal\Business
+ */
 class Universal
 {
 	use CrudBusiness;
+    /**
+     * @var
+     */
+    public $model;
+    /**
+     * @var
+     */
+    public $essence;
 
-	public function __construct()
+    /**
+     * Universal constructor.
+     */
+    public function __construct()
 	{
 		$this->init();
 	}
 
-	public function init()
+    /**
+     *
+     */
+    public function init()
 	{
 		$className = $classNameOrigin = (new \ReflectionClass($this))->getShortName();
 
